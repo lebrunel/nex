@@ -1,7 +1,7 @@
 ## 
 # BUILD STAGE
 # ===========
-FROM elixir:1.14-alpine AS build
+FROM elixir:1.14-otp-24-alpine AS build
 
 # Install build deps
 RUN apk update && \
@@ -39,6 +39,13 @@ RUN mix release
 # APP STAGE
 # =========
 FROM alpine:3.16 AS app
+
+LABEL org.opencontainers.image.title="Nex"
+LABEL org.opencontainers.image.description="Nex is a performance nostr relay, written in Elixir"
+LABEL org.opencontainers.image.source="https://github.com/lebrunel/nex"
+LABEL org.opencontainers.image.source="https://hexdocs.pm/nex"
+LABEL org.opencontainers.image.authors="lebrunel"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
 
 # Runtime deps
 RUN apk update && \
