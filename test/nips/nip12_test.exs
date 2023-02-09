@@ -30,10 +30,9 @@ defmodule Nex.Nips.Nip12Test do
       assert {:ok, ws} = ws_connect()
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["REQ", "abc", %{"#x" => ["foo", "bar"]}])})
 
-      # Recieve the event messages
-      assert_receive event_messages
-      assert {:ok, ws, events} = ws_decode(ws, event_messages)
-      assert_in_delta length(events), 2, 1
+      # Recieve the event messages (2 + eose)
+      assert {:ok, ws, events} = ws_receive(ws, 3)
+      assert length(events) == 3
 
       ws_close(ws)
     end

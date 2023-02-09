@@ -37,8 +37,7 @@ defmodule Nex.Nips.Nip02Test do
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["EVENT", msg])})
 
       # Recieve a success msg back
-      assert_receive success_message
-      assert {:ok, ws, [{:text, res}]} = ws_decode(ws, success_message)
+      assert {:ok, ws, [{:text, res}]} = ws_receive(ws, 1)
       assert ["OK", ^id, true | _] = Jason.decode!(res)
 
       ws_close(ws)

@@ -46,6 +46,18 @@ defmodule Nex.TestCase do
       {:ok, {conn, ref, socket}}
     end
 
+    def ws_receive(ws, count, messages \\ []) do
+      %{socket: port} = elem(ws, 0)
+      assert_receive {:tcp, ^port, _} = raw_messages, 1000
+      assert {:ok, ws, msgs} = ws_decode(ws, raw_messages)
+      messages = messages ++ msgs
+      if length(messages) < count do
+        ws_receive(ws, count, messages)
+      else
+        {:ok, ws, messages}
+      end
+    end
+
     def ws_decode({conn, ref, socket}, raw_message) do
       {:ok, conn, [{:data, ^ref, data}]} = WebSocket.stream(conn, raw_message)
       {:ok, socket, messages} = WebSocket.decode(socket, data)

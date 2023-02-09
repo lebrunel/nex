@@ -15,13 +15,12 @@ defmodule Nex.Nips.Nip01Test do
       assert Nex.Repo.aggregate(Event, :count, :id) == 0
 
       # Alys connects and posts an message
-      assert {:ok, {%{socket: port}, _, _} = ws} = ws_connect()
+      assert {:ok, ws} = ws_connect()
       %{id: id} = msg = build_event(%{content: "alys test"}, alys_key)
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["EVENT", msg])})
 
       # Recieve a success msg back
-      assert_receive {:tcp, ^port, _} = success_message
-      assert {:ok, ws, [{:text, res}]} = ws_decode(ws, success_message)
+      assert {:ok, ws, [{:text, res}]} = ws_receive(ws, 1)
       assert ["OK", ^id, true | _] = Jason.decode!(res)
 
       ws_close(ws)
@@ -32,13 +31,12 @@ defmodule Nex.Nips.Nip01Test do
       assert Nex.Repo.aggregate(Event, :count, :id) == 0
 
       # Alys connects and posts an invalid message
-      assert {:ok, {%{socket: port}, _, _} = ws} = ws_connect()
+      assert {:ok, ws} = ws_connect()
       %{id: id} = msg = build_event(alys_key) |> Map.put(:content, "alys test")
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["EVENT", msg])})
 
       # Recieve a success msg back
-      assert_receive {:tcp, ^port, _} = success_message
-      assert {:ok, ws, [{:text, res}]} = ws_decode(ws, success_message)
+      assert {:ok, ws, [{:text, res}]} = ws_receive(ws, 1)
       assert ["OK", ^id, false, "invalid:" <> _] = Jason.decode!(res)
 
       ws_close(ws)
@@ -50,13 +48,12 @@ defmodule Nex.Nips.Nip01Test do
       assert Nex.Repo.aggregate(Event, :count, :id) == 1
 
       # Alys connects and posts a new metadata
-      assert {:ok, {%{socket: port}, _, _} = ws} = ws_connect()
+      assert {:ok, ws} = ws_connect()
       %{id: id} = msg = build_event(%{kind: 0, content: "alys 2"}, alys_key)
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["EVENT", msg])})
 
       # Recieve a success msg back
-      assert_receive {:tcp, ^port, _} = success_message
-      assert {:ok, ws, [{:text, res}]} = ws_decode(ws, success_message)
+      assert {:ok, ws, [{:text, res}]} = ws_receive(ws, 1)
       assert ["OK", ^id, true | _] = Jason.decode!(res)
 
       ws_close(ws)
@@ -79,12 +76,11 @@ defmodule Nex.Nips.Nip01Test do
       for i <- 1..3, do: create(build_event(%{content: "alys #{i}"}, alys_key))
 
       # Bob connects and subscribes to Alys's feed
-      assert {:ok, {%{socket: port}, _, _} = ws} = ws_connect()
+      assert {:ok, ws} = ws_connect()
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["REQ", "abc", %{"authors" => [alys_pub]}])})
 
       # Recieve the event messages
-      assert_receive {:tcp, ^port, _} = event_messages
-      assert {:ok, ws, events} = ws_decode(ws, event_messages)
+      assert {:ok, ws, events} = ws_receive(ws, 4)
       assert length(events) == 4
 
       ws_close(ws)
@@ -93,27 +89,24 @@ defmodule Nex.Nips.Nip01Test do
     test "subscribing to alys pubkey responds with her future events", %{alys: alys_key, alys_pub: alys_pub} do
       # Bob connects and subscribes to Alys's feed
       sub_id = "abc"
-      assert {:ok, {%{socket: bob_port}, _, _} = bob_ws} = ws_connect()
+      assert {:ok, bob_ws} = ws_connect()
       assert {:ok, bob_ws} = ws_push(bob_ws, {:text, Jason.encode!(["REQ", sub_id, %{"authors" => [alys_pub]}])})
 
       # Bob recieves initial EOSE message
-      assert_receive {:tcp, ^bob_port, _} = event_message
-      assert {:ok, bob_ws, [{:text, res}]} = ws_decode(bob_ws, event_message)
+      assert {:ok, bob_ws, [{:text, res}]} = ws_receive(bob_ws, 1)
       assert ["EOSE", ^sub_id] = Jason.decode!(res)
 
       # Alys connects and posts an message
-      assert {:ok, {%{socket: alys_port}, _, _} = alys_ws} = ws_connect()
+      assert {:ok, alys_ws} = ws_connect()
       %{id: id} = msg = build_event(%{content: "alys test"}, alys_key)
       assert {:ok, alys_ws} = ws_push(alys_ws, {:text, Jason.encode!(["EVENT", msg])})
 
       # Alys recieve a success msg back
-      assert_receive {:tcp, ^alys_port, _} = success_message
-      assert {:ok, alys_ws, [{:text, res}]} = ws_decode(alys_ws, success_message)
+      assert {:ok, alys_ws, [{:text, res}]} = ws_receive(alys_ws, 1)
       assert ["OK", ^id, true | _] = Jason.decode!(res)
 
       # Bob recieves the event message
-      assert_receive {:tcp, ^bob_port, _} = event_message
-      assert {:ok, bob_ws, [{:text, event}]} = ws_decode(bob_ws, event_message)
+      assert {:ok, bob_ws, [{:text, event}]} = ws_receive(bob_ws, 1)
       assert ["EVENT", ^sub_id, _msg] = Jason.decode!(event)
 
       ws_close(alys_ws)
@@ -122,12 +115,11 @@ defmodule Nex.Nips.Nip01Test do
 
     test "invalid subscription returns an error notice" do
       sub_id = "abc"
-      assert {:ok, {%{socket: port}, _, _} = ws} = ws_connect()
+      assert {:ok, ws} = ws_connect()
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["REQ", sub_id, %{}, %{}])})
 
       # Recieves a notice msg back
-      assert_receive {:tcp, ^port, _} = notice_message
-      assert {:ok, ws, [{:text, res}]} = ws_decode(ws, notice_message)
+      assert {:ok, ws, [{:text, res}]} = ws_receive(ws, 1)
       assert ["NOTICE", msg] = Jason.decode!(res)
       assert String.match?(msg, ~r/invalid/)
 
@@ -136,19 +128,17 @@ defmodule Nex.Nips.Nip01Test do
 
     test "duplicate subscription returns an error notice" do
       sub_id = "abc"
-      assert {:ok, {%{socket: port}, _, _} = ws} = ws_connect()
+      assert {:ok, ws} = ws_connect()
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["REQ", sub_id, %{"authors" => ["abc"]}])})
 
       # Recieves initial EOSE msg
-      assert_receive {:tcp, ^port, _} = notice_message
-      assert {:ok, ws, [{:text, res}]} = ws_decode(ws, notice_message)
+      assert {:ok, ws, [{:text, res}]} = ws_receive(ws, 1)
       assert ["EOSE", ^sub_id] = Jason.decode!(res)
 
       assert {:ok, ws} = ws_push(ws, {:text, Jason.encode!(["REQ", sub_id, %{"authors" => ["abc"]}])})
 
       # Recieves a notice msg back
-      assert_receive {:tcp, ^port, _} = notice_message
-      assert {:ok, ws, [{:text, res}]} = ws_decode(ws, notice_message)
+      assert {:ok, ws, [{:text, res}]} = ws_receive(ws, 1)
       assert ["NOTICE", msg] = Jason.decode!(res)
       assert String.match?(msg, ~r/duplicate/)
 
