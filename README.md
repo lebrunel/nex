@@ -8,12 +8,12 @@ Nex is a performant [nostr](https://github.com/nostr-protocol/nostr) relay, writ
 
 ## Supported NIPs
 
-- [x] NIP-01 [Basic protocol flow description](https://github.com/nostr-protocol/nips/blob/master/01.md)
-- [x] NIP-02 [Contact List and Petnames](https://github.com/nostr-protocol/nips/blob/master/02.md)
-- [ ] NIP-04 [Encrypted Direct Messages](https://github.com/nostr-protocol/nips/blob/master/04.md)
-- [ ] NIP-09 [Event Deletion](https://github.com/nostr-protocol/nips/blob/master/09.md)
-- [x] NIP-11 [Relay Information Document](https://github.com/nostr-protocol/nips/blob/master/11.md)
-- [x] NIP-12 [Generic Tag Queries](https://github.com/nostr-protocol/nips/blob/master/12.md)
+- [x] NIP-01 - [Basic protocol flow description](https://github.com/nostr-protocol/nips/blob/master/01.md)
+- [x] NIP-02 - [Contact List and Petnames](https://github.com/nostr-protocol/nips/blob/master/02.md)
+- [x] NIP-04 - [Encrypted Direct Messages](https://github.com/nostr-protocol/nips/blob/master/04.md)
+- [x] NIP-09 - [Event Deletion](https://github.com/nostr-protocol/nips/blob/master/09.md)
+- [x] NIP-11 - [Relay Information Document](https://github.com/nostr-protocol/nips/blob/master/11.md)
+- [x] NIP-12 - [Generic Tag Queries](https://github.com/nostr-protocol/nips/blob/master/12.md)
 - [ ] NIP-15 [End of Stored Events Notice](https://github.com/nostr-protocol/nips/blob/master/15.md)
 - [ ] NIP-16 [Event Treatment](https://github.com/nostr-protocol/nips/blob/master/16.md)
 - [ ] NIP-20 [Command Results](https://github.com/nostr-protocol/nips/blob/master/20.md)

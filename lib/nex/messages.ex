@@ -60,11 +60,11 @@ defmodule Nex.Messages do
     changes = Event.verify_changeset(%Event{}, params)
     Multi.new()
     |> Multi.insert(:event, changes, on_conflict: :nothing)
-    |> Multi.delete_all(:drop, fn %{event: %{pubkey: pubkey, kind: 5, tags: tags}} ->
+    |> Multi.delete_all(:drop, fn %{event: %{pubkey: pubkey, kind: 5, db_tags: tags}} ->
       ids =
         tags
         |> Enum.filter(& &1.name == "e")
-        |> Enum.map(& hd(&1.value))
+        |> Enum.map(& &1.value)
 
       where(Event, [e], e.id in ^ids and e.pubkey == ^pubkey and e.kind != 5)
     end)

@@ -1,6 +1,5 @@
 defmodule Nex.Nips.Nip02Test do
   use Nex.TestCase
-  use Plug.Test
   import Ecto.Query, only: [from: 2]
   alias Nex.Messages.{Event, DBTag}
 
@@ -9,7 +8,7 @@ defmodule Nex.Nips.Nip02Test do
     {:ok, key: key}
   end
 
-  describe "Creating events [NIP-02]" do
+  describe "Contact lists [NIP-02]" do
     test "posting contact list deletes previous list", %{key: key} do
       %{nid: nid} = create(build_event(%{
         kind: 3,

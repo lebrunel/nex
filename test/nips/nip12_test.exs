@@ -1,6 +1,5 @@
 defmodule Nex.Nips.Nip12Test do
   use Nex.TestCase
-  use Plug.Test
   alias Nex.Messages.Event
 
   setup_all do

@@ -1,6 +1,5 @@
 defmodule Nex.Nips.Nip01Test do
   use Nex.TestCase
-  use Plug.Test
   import Ecto.Query, only: [from: 2]
   alias Nex.Messages.Event
 

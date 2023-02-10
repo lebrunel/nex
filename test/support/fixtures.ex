@@ -5,17 +5,14 @@ defmodule Nex.Fixtures do
 
   def build_event(params \\ %{}, privkey) do
     {:ok, pubkey} = K256.Schnorr.verifying_key_from_signing_key(privkey)
-      #tags =
-      #  params
-      #  |> Map.get(:tags, [])
-      #  |> Enum.map(&build_tag/1)
+      rand = :crypto.strong_rand_bytes(4) |> Base.encode16(case: :lower)
 
       event = Map.merge(%Event{
         pubkey: Base.encode16(pubkey, case: :lower),
         created_at: DateTime.utc_now() |> DateTime.to_unix(),
         kind: 1,
         tags: [],
-        content: "test",
+        content: "test-#{rand}",
       }, Map.take(params, [:created_at, :kind, :tags, :content]))
       |> then(fn %Event{tags: tags} = event ->
         Map.put(event, :db_tags, Enum.map(tags, &build_tag/1))
