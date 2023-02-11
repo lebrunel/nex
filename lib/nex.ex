@@ -5,7 +5,22 @@ defmodule Nex do
   @relay_info Application.compile_env(:nex, :info, %{})
   @software "https://github.com/libitx/nex"
   @version Mix.Project.config[:version]
-  @supported_nips [1, 2, 4, 9, 11, 12, 15, 16, 20, 22, 26, 28]
+  @supported_nips [
+    1,
+    2,
+    4,
+    9,
+    11,
+    12,
+    13,
+    15,
+    16,
+    20,
+    22,
+    26,
+    28,
+    40,
+  ]
 
   @doc """
   Returns the [NIP-11](https://github.com/nostr-protocol/nips/blob/master/11.md)

@@ -11,15 +11,10 @@ defmodule Nex.Socket do
   @behaviour WebSock
 
   @heartbeat 20_000
+
   @limits %{
-    connection: [
-      {60_000, 50},
-      {3_600_000, 300},
-    ],
-    message: [
-      {60_000, 240},
-      {3_600_000, 3600},
-    ]
+    connection: Application.compile_env(:nex, [:limits, :connection, :rate_limits], []),
+    message: Application.compile_env(:nex, [:limits, :message, :rate_limits], []),
   }
 
   defstruct pid: nil, client_id: nil, client_ip: nil, subs: nil
@@ -65,7 +60,7 @@ defmodule Nex.Socket do
       MessageHandler.handle_item(message, socket)
     else
       {:deny, {scale_ms, rate}} ->
-        send(socket.pid, {:message, {:NOTICE, "Rate limited: #{rate} message / #{scale_ms} ms exceeded"}})
+        send(socket.pid, {:message, {:NOTICE, "rate-limited: #{rate} message / #{scale_ms} ms exceeded"}})
         {:ok, socket}
       _ ->
         # invalid message - disconnect

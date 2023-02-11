@@ -4,6 +4,41 @@ import Config
 config :nex,
   ecto_repos: [Nex.Repo]
 
+# Configure limits
+config :nex, :limits,
+  connection: [
+    rate_limits: [
+      {1,     10},  # 10 / sec
+      {60,    50},  # 50 / min
+      {3600,  300}, # 300 / hour
+    ]
+  ],
+  message: [
+    rate_limits: [
+      {60,    240},   # 240 / min
+      {3600,  3600},  # 3600 / hour
+    ]
+  ],
+  event: [
+    id: [
+      # nip-13
+      min_pow_bits: 0,
+    ],
+    pubkey: [
+      whitelist: [],
+      blacklist: [],
+    ],
+    kind: [
+      whitelist: [],
+      blacklist: [],
+    ],
+    created_at: [
+      # nip-22
+      min_delta: 0,
+      max_delta: 0,
+    ],
+  ]
+
 # Configure Hammer backend
 config :hammer,
   backend: {Hammer.Backend.ETS, [

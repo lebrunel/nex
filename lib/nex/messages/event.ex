@@ -56,6 +56,7 @@ defmodule Nex.Messages.Event do
     event
     |> changeset(params)
     |> validate_id()
+    |> validate_pow()
     |> validate_sig()
   end
 
@@ -90,17 +91,18 @@ defmodule Nex.Messages.Event do
   end
 
   # Validates a changeset field with the given value.
-  @spec validate_field(atom(), integer()) :: list()
+  @spec validate_field(atom(), any()) :: list()
   defp validate_field(:created_at, timestamp) do
-    limits = Application.get_env(:nex, :limits, [])
     now = DateTime.utc_now() |> DateTime.to_unix()
+    min_delta = get_in(limits(), [:created_at, :min_delta])
+    max_delta = get_in(limits(), [:created_at, :max_delta])
 
-    case Enum.into(limits, %{}) do
-      %{created_at_max_delta: delta} when delta > 0 and timestamp > now + delta ->
-        [created_at: {"more than %{s} seconds in the future", s: delta}]
-      %{created_at_min_delta: delta} when delta > 0 and timestamp < now - delta ->
-        [created_at: {"less than %{s} seconds in the past", s: delta}]
-      _ ->
+    cond do
+      is_integer(min_delta) and min_delta > 0 and timestamp < now - min_delta ->
+        [created_at: "can't be more than #{min_delta} seconds old"]
+      is_integer(max_delta) and max_delta > 0 and timestamp > now + max_delta ->
+        [created_at: "can't be more than #{max_delta} seconds in the future"]
+      true ->
         []
     end
   end
@@ -113,6 +115,18 @@ defmodule Nex.Messages.Event do
     case get_field(changes, :id) do
       ^id -> changes
       _ -> add_error(changes, :id, "invalid ID")
+    end
+  end
+
+  # Validates the ID contains configured proof if work (nip-13)
+  defp validate_pow(%{valid?: false} = changes), do: changes
+  defp validate_pow(changes) do
+    id = get_field(changes, :id) |> Base.decode16!(case: :lower)
+    pow = get_in(limits(), [:id, :min_pow_bits])
+
+    case is_integer(pow) and match?(<<0::size(pow), _::bitstring>>, id) do
+      true -> changes
+      false -> add_error(changes, :id, "must have POW difficulty of #{pow}")
     end
   end
 
@@ -153,6 +167,12 @@ defmodule Nex.Messages.Event do
       _ ->
         changes
     end
+  end
+
+  # Configured event limits
+  defp limits() do
+    Application.get_env(:nex, :limits, [])
+    |> Keyword.get(:event, [])
   end
 
 

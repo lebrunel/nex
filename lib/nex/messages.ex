@@ -132,7 +132,7 @@ defmodule Nex.Messages do
     |> where(^filter_by(:since, filter))
     |> where(^filter_by(:until, filter))
     |> where(^filter_by(:tags, filter))
-    |> where([e], is_nil(e.expires_at) or e.expires_at < ^now)
+    |> where([e], is_nil(e.expires_at) or e.expires_at > ^now)
   end
 
   # Adds a dynamic query for the given filter key.

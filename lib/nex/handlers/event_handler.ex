@@ -7,20 +7,21 @@ defmodule Nex.Handlers.EventHandler do
 
   @behaviour Nex.Handler
 
+  @replaceable_kinds  [0, 3, 41]
   @replaceable_range  10000..19999
   @ephemeral_range    20000..29999
 
   @impl true
   def handle_item(event_params, %Socket{} = socket) when is_map(event_params) do
     case event_params["kind"] do
-      k when k in [0, 3, 41] or k in @replaceable_range ->
+      k when k in @replaceable_kinds or k in @replaceable_range ->
         handle_replaceable_event(event_params, socket)
-
-      5 ->
-        handle_delete_event(event_params, socket)
 
       k when k in @ephemeral_range ->
         handle_ephemeral_event(event_params, socket)
+
+      5 ->
+        handle_delete_event(event_params, socket)
 
       _ ->
         handle_default_event(event_params, socket)
@@ -98,7 +99,7 @@ defmodule Nex.Handlers.EventHandler do
   defp get_first_error(changes) do
     errors = get_error_map(changes)
     key = hd(Map.keys(errors))
-    "#{Atom.to_string(key) |> String.capitalize()} #{hd(errors[key])}"
+    "#{Atom.to_string(key)} #{hd(errors[key])}"
   end
 
   # Reduces all changeset errors into a human readable form.

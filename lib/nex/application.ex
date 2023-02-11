@@ -1,15 +1,15 @@
 defmodule Nex.Application do
   @moduledoc false
-  require Logger
-
   use Application
+
+  @port System.get_env("PORT", "4000")
 
   @impl true
   def start(_type, _args) do
     children = [
       Nex.Repo,
       {Bandit, plug: Nex.Plug, scheme: :http, options: [
-        port: 4000,
+        port: String.to_integer(@port),
         read_timeout: 30_000
       ]},
       {Phoenix.PubSub, name: Nex.PubSub},

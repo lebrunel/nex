@@ -24,6 +24,12 @@ defmodule Nex.TestCase do
       end)
     end
 
+    def set_limits(callback \\ fn limits -> limits end) do
+      conf = Application.get_env(:nex, :limits)
+      |> then(callback)
+      Application.put_env(:nex, :limits, conf)
+    end
+
     def ws_connect() do
       {:ok, conn} = HTTP.connect(:http, "localhost", 4000)
       {:ok, conn, ref} = WebSocket.upgrade(:ws, conn, "/", [])

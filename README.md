@@ -14,13 +14,14 @@ Nex is a performant [nostr](https://github.com/nostr-protocol/nostr) relay, writ
 - [x] NIP-09 - [Event Deletion](https://github.com/nostr-protocol/nips/blob/master/09.md)
 - [x] NIP-11 - [Relay Information Document](https://github.com/nostr-protocol/nips/blob/master/11.md)
 - [x] NIP-12 - [Generic Tag Queries](https://github.com/nostr-protocol/nips/blob/master/12.md)
-- [ ] NIP-15 [End of Stored Events Notice](https://github.com/nostr-protocol/nips/blob/master/15.md)
-- [ ] NIP-16 [Event Treatment](https://github.com/nostr-protocol/nips/blob/master/16.md)
-- [ ] NIP-20 [Command Results](https://github.com/nostr-protocol/nips/blob/master/20.md)
-- [ ] NIP-22 [Event created_at Limits](https://github.com/nostr-protocol/nips/blob/master/22.md)
-- [ ] NIP-26 [Delegated Event Signing](https://github.com/nostr-protocol/nips/blob/master/26.md)
-- [ ] NIP-28 [Public Chat](https://github.com/nostr-protocol/nips/blob/master/28.md)
-- [ ] NIP-40 [Expiration Timestamp](https://github.com/nostr-protocol/nips/blob/master/40.md)
+- [x] NIP-13 - [Proof of Work](https://github.com/nostr-protocol/nips/blob/master/13.md)
+- [x] NIP-15 - [End of Stored Events Notice](https://github.com/nostr-protocol/nips/blob/master/15.md)
+- [x] NIP-16 - [Event Treatment](https://github.com/nostr-protocol/nips/blob/master/16.md)
+- [x] NIP-20 - [Command Results](https://github.com/nostr-protocol/nips/blob/master/20.md)
+- [x] NIP-22 - [Event created_at Limits](https://github.com/nostr-protocol/nips/blob/master/22.md)
+- [x] NIP-26 - [Delegated Event Signing](https://github.com/nostr-protocol/nips/blob/master/26.md)
+- [x] NIP-28 - [Public Chat](https://github.com/nostr-protocol/nips/blob/master/28.md)
+- [x] NIP-40 - [Expiration Timestamp](https://github.com/nostr-protocol/nips/blob/master/40.md)
 
 ## Deploying with Docker
 

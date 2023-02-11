@@ -13,5 +13,14 @@ if System.get_env("TEST_ENV") == "github" do
     password: "postgres"
 end
 
+# Configure limits
+config :nex, :limits,
+  connection: [
+    rate_limits: [] # disbale limits in tests
+  ],
+  message: [
+    rate_limits: [] # disbale limits in tests
+  ]
+
 # Print only warnings and errors during test
 config :logger, level: :warn
