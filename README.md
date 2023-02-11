@@ -1,9 +1,13 @@
 # Nex
 
-Nex is a performant [nostr](https://github.com/nostr-protocol/nostr) relay, written in Elixir.
+![Hex.pm](https://img.shields.io/hexpm/v/nex?color=informational)
+![License](https://img.shields.io/github/license/lebrunel/nex?color=informational)
+![Build Status](https://img.shields.io/github/actions/workflow/status/lebrunel/nex/elixir.yml?branch=main)
 
-- Highly scalable and concurrent backend written in Elixir.
-- Built in and configurable IP-based rate limiting.
+Nex is a powerful and flexible [Nostr](https://github.com/nostr-protocol/nostr) relay built in Elixir.
+
+- The Erlang OTP behind Elixir is highly scalabe meaning Nex can easily handle a large number of concurrent connections.
+- Nex features built-in IP-based rate limiting, which can be configured to suit your specific needs. 
 - Run as a standalone service or plug in to an existing Plug-base or Phoenix application.
 
 ## Supported NIPs
@@ -23,24 +27,20 @@ Nex is a performant [nostr](https://github.com/nostr-protocol/nostr) relay, writ
 - [x] NIP-28 - [Public Chat](https://github.com/nostr-protocol/nips/blob/master/28.md)
 - [x] NIP-40 - [Expiration Timestamp](https://github.com/nostr-protocol/nips/blob/master/40.md)
 
-## Deploying with Docker
+## Quickstart
 
 TODO
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `nex` to your list of dependencies in `mix.exs`:
+TODO
 
-```elixir
-def deps do
-  [
-    {:nex, "~> 0.1.0"}
-  ]
-end
-```
+## Deploying with Docker
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/nex>.
+TODO
 
+## License
+
+Nex is open source and released under the [Apache-2 License](https://github.com/lebrunel/nex/blob/master/LICENSE).
+
+© Copyright 2023 lebrunel.

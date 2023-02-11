@@ -27,7 +27,7 @@ defmodule Nex.Nips.Nip22Test do
     test "too old event returns OK false", ctx do
       timestamp =
         DateTime.utc_now()
-        |> DateTime.add(-61, :minute)
+        |> DateTime.add(-3660, :second)
         |> DateTime.to_unix()
 
       assert {:ok, ws} = ws_connect()
@@ -43,7 +43,7 @@ defmodule Nex.Nips.Nip22Test do
     test "too futuristic event returns OK false", ctx do
       timestamp =
         DateTime.utc_now()
-        |> DateTime.add(61, :minute)
+        |> DateTime.add(3660, :second)
         |> DateTime.to_unix()
 
       assert {:ok, ws} = ws_connect()

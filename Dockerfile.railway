@@ -1,0 +1,30 @@
+FROM ghcr.io/lebrunel/nex:main
+
+WORKDIR /app
+
+ARG PORT
+ARG DATABASE_URL
+ARG PGHOST
+ARG PGPORT
+ARG PGDATABASE
+ARG PGUSER
+ARG PGPASSWORD
+
+ENV PORT=$PORT
+ENV DATABASE_URL=$DATABASE_URL
+ENV DB_HOST=$PGHOST
+ENV DB_PORT=$PGPORT
+ENV DB_NAME=$PGDATABASE
+ENV DB_USER=$PGUSER
+ENV DB_PASSWORD=$PGPASSWORD
+
+RUN bin/nex eval "Nex.Release.migrate()"
+
+LABEL org.opencontainers.image.title="Nex"
+LABEL org.opencontainers.image.description="Nex is a performance nostr relay, written in Elixir"
+LABEL org.opencontainers.image.source="https://github.com/lebrunel/nex"
+LABEL org.opencontainers.image.source="https://hexdocs.pm/nex"
+LABEL org.opencontainers.image.authors="lebrunel"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+
+CMD ["bin/nex", "start"]
