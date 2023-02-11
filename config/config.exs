@@ -2,7 +2,8 @@ import Config
 
 # Configure Nex app
 config :nex,
-  ecto_repos: [Nex.Repo]
+  ecto_repos: [Nex.Repo],
+  http_port: 4000
 
 # Configure limits
 config :nex, :limits,

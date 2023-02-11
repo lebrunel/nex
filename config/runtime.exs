@@ -2,6 +2,10 @@ import Config
 
 if config_env() == :prod do
   database_url = System.get_env("DATABASE_URL")
+  http_port = System.get_env("PORT", "4000")
+
+  config :nex,
+    http_port: String.to_integer(http_port)
 
   config :nex, Nex.Repo,
     adapter: Ecto.Adapters.Postgres,
