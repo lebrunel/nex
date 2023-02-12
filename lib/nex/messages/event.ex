@@ -9,6 +9,19 @@ defmodule Nex.Messages.Event do
   alias Nex.Messages.{DBTag, Tag}
   alias Nex.Utils.DelegatedEvents
 
+  @typedoc "Event"
+  @type t() :: %__MODULE__{
+    id: String.t(),
+    pubkey: String.t(),
+    delegator: String.t(),
+    created_at: integer(),
+    expires_at: integer(),
+    kind: integer(),
+    tags: list(Tag.t()),
+    content: String.t(),
+    sig: String.t(),
+  }
+
   @primary_key {:nid, :id, autogenerate: true}
   schema "events" do
     field :id, :string

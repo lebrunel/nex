@@ -8,7 +8,7 @@ defmodule Nex.Handler do
   alias Nex.Socket
 
   @doc """
-  Callback for handling message items. Must return a `t:Websock.handle_result/0`.
+  Callback for handling message items. Must return a `t:WebSock.handle_result/0`.
   """
   @callback handle_item(term(), Socket.t()) :: WebSock.handle_result()
 
