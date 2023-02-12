@@ -17,8 +17,8 @@ ENV RUSTUP_HOME=/root/.rustup \
 WORKDIR /build
 ENV HOME=/build
 ENV MIX_ENV=prod
-ARG force_build_rust=0
-ENV RUSTLER_PRECOMPILATION_EXAMPLE_BUILD=${force_build_rust}
+ARG FORCE_RUST_BUILD=0
+ENV RUSTLER_PRECOMPILATION_EXAMPLE_BUILD=${FORCE_RUST_BUILD}
 
 # Install Hex and Rebar
 RUN mix local.hex --force && \

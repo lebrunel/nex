@@ -1,8 +1,8 @@
 name: Docker Release
 
 on:
-  push:
-    branches: [ main ]
+  release:
+    types: [published]
 
 env:
   REGISTRY: ghcr.io
@@ -19,9 +19,9 @@ jobs:
       matrix:
         include:
           - arch: linux/amd64
-            force_build_rust: 0
-          - arch: linux/arm64
-            force_build_rust: 1
+            FORCE_RUST_BUILD: 0
+          #- arch: linux/arm64
+          #  FORCE_RUST_BUILD: 1
 
     steps:
       - uses: actions/checkout@v3
@@ -40,6 +40,6 @@ jobs:
           context: .
           push: true
           platforms: ${{ matrix.arch }}
-          build-args: force_build_rust=${{ matrix.force_build_rust }}
+          build-args: FORCE_RUST_BUILD=${{ matrix.FORCE_RUST_BUILD }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
