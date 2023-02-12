@@ -1,4 +1,4 @@
-FROM ghcr.io/lebrunel/nex:main
+FROM ghcr.io/lebrunel/nex:latest
 
 WORKDIR /app
 
