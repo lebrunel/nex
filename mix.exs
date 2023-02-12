@@ -4,12 +4,14 @@ defmodule Nex.MixProject do
   def project do
     [
       app: :nex,
-      version: "0.1.0",
+      version: "0.1.0-beta.1",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      aliases: aliases()
+      aliases: aliases(),
+      docs: docs(),
+      package: pkg(),
     ]
   end
 
@@ -32,6 +34,7 @@ defmodule Nex.MixProject do
       {:cors_plug, "~> 3.0"},
       {:ecto_sql, "~> 3.9"},
       {:ets, "~> 0.9"},
+      {:ex_doc, "~> 0.29", only: :dev, runtime: false},
       {:hammer, "~> 6.1"},
       {:jason, "~> 1.4"},
       {:k256, "~> 0.0.6"},
@@ -45,6 +48,23 @@ defmodule Nex.MixProject do
   defp aliases do
     [
      "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
+    ]
+  end
+
+  defp docs do
+    [
+      main: "Nex"
+    ]
+  end
+
+  defp pkg do
+    [
+      name: "nex",
+      files: ~w(lib .formatter.exs mix.exs README.md LICENSE),
+      licenses: ["Apache-2.0"],
+      links: %{
+        "GitHub" => "https://github.com/lebrunel/nex"
+      }
     ]
   end
 end

@@ -4,9 +4,9 @@
 ![License](https://img.shields.io/github/license/lebrunel/nex?color=informational)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/lebrunel/nex/elixir.yml?branch=main)
 
-Nex is a powerful and flexible [Nostr](https://github.com/nostr-protocol/nostr) relay built in Elixir.
+Nex is a powerful and flexible [Nostr](https://github.com/nostr-protocol/nostr) relay written in Elixir.
 
-- The Erlang OTP behind Elixir is highly scalabe meaning Nex can easily handle a large number of concurrent connections.
+- Elixir's highly scalabe nature means Nex can easily handle a large number of concurrent connections.
 - Nex features built-in IP-based rate limiting, which can be configured to suit your specific needs. 
 - Run as a standalone service or plug in to an existing Plug-base or Phoenix application.
 
@@ -29,7 +29,7 @@ Nex is a powerful and flexible [Nostr](https://github.com/nostr-protocol/nostr) 
 
 ## Quickstart
 
-TODO
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/L4aHLu?referralCode=_w8n1n)
 
 ## Installation
 

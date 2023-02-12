@@ -11,10 +11,16 @@ defmodule Nex.Plug do
   forward "/nex", to: Nex.Plug
   ```
   """
+  require EEx
   use Plug.Builder
 
   plug CORSPlug
   plug :nex
+
+  @version Mix.Project.config[:version]
+
+  # Compile the homepage to a function
+  EEx.function_from_file(:defp, :hompage, "priv/static/index.html.eex", [:version])
 
   @doc """
   Nex Plug function - handles all HTTP and websocket connections.
@@ -41,7 +47,7 @@ defmodule Nex.Plug do
         |> send_resp(200, Jason.encode!(Nex.relay_info()))
 
       true ->
-        send_resp(conn, 200, "Nex")
+        send_resp(conn, 200, hompage(@version))
     end
   end
 
