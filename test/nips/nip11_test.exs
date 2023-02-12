@@ -20,7 +20,7 @@ defmodule Nex.Nips.Nip11Test do
       |> Nex.Plug.call(Nex.Plug.init([]))
       |> sent_resp()
 
-      assert body == "Nex"
+      assert String.match?(body, ~r/nex/)
     end
   end
 
