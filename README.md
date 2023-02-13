@@ -29,7 +29,7 @@ Nex is a powerful and flexible [Nostr](https://github.com/nostr-protocol/nostr) 
 
 ## Quickstart
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/L4aHLu?referralCode=_w8n1n)
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template/Fxl2iH?referralCode=_w8n1n)
 
 ## Installation
 
