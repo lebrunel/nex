@@ -22,17 +22,6 @@ defmodule Nex.MessagesTest do
     {:ok, e1: e1, e2: e2, e3: e3, e4: e4, e5: e5}
   end
 
-  #test "xxx", ctx do
-  #  res =
-  #    [%{"ids" => [ctx.e1.id, ctx.e2.id, "xxxx", "yyyy"]}]
-  #    |> Enum.map(&Filter.cast/1)
-  #    |> Messages.stream_events(fn event ->
-  #      dbg Jason.encode!(event)
-  #    end)
-#
-  #  dbg res
-  #end
-
   describe "list_events/1 with single filter" do
     test "filters by any id", ctx do
       res =

@@ -25,6 +25,7 @@ Nex is a powerful and flexible [Nostr](https://github.com/nostr-protocol/nostr) 
 - [x] NIP-22 - [Event created_at Limits](https://github.com/nostr-protocol/nips/blob/master/22.md)
 - [x] NIP-26 - [Delegated Event Signing](https://github.com/nostr-protocol/nips/blob/master/26.md)
 - [x] NIP-28 - [Public Chat](https://github.com/nostr-protocol/nips/blob/master/28.md)
+- [x] NIP-33 - [Parameterized Replaceable Events](https://github.com/nostr-protocol/nips/blob/master/33.md)
 - [x] NIP-40 - [Expiration Timestamp](https://github.com/nostr-protocol/nips/blob/master/40.md)
 
 ## Quickstart

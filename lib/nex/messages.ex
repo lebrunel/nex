@@ -37,10 +37,8 @@ defmodule Nex.Messages do
     changes = Event.verify_changeset(%Event{}, params)
     Multi.new()
     |> Multi.insert(:event, changes, on_conflict: :nothing)
-    |> Multi.delete_all(:drop, fn %{event: %{nid: nid, pubkey: pubkey, kind: kind, created_at: created_at}} ->
-      Event
-      |> where([e], e.nid != ^nid and e.created_at <= ^created_at)
-      |> where([e], e.pubkey == ^pubkey and e.kind == ^kind)
+    |> Multi.delete_all(:drop, fn %{event: %{nid: nid, replace_key: replace_key}} ->
+      where(Event, [e], e.nid < ^nid and e.replace_key == ^replace_key)
     end)
     |> Repo.transaction()
   end

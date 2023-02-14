@@ -7,14 +7,17 @@ defmodule Nex.Handlers.EventHandler do
 
   @behaviour Nex.Handler
 
-  @replaceable_kinds  [0, 3, 41]
-  @replaceable_range  10000..19999
-  @ephemeral_range    20000..29999
+  @replaceable_kinds    [0, 3, 41]
+  @replaceable_range    10000..19999
+  @ephemeral_range      20000..29999
+  @parameterized_range  30000..39999
 
   @impl true
   def handle_item(event_params, %Socket{} = socket) when is_map(event_params) do
     case event_params["kind"] do
-      k when k in @replaceable_kinds or k in @replaceable_range ->
+      k when k in @replaceable_kinds
+      or k in @replaceable_range
+      or k in @parameterized_range ->
         handle_replaceable_event(event_params, socket)
 
       k when k in @ephemeral_range ->
@@ -40,18 +43,6 @@ defmodule Nex.Handlers.EventHandler do
     {:ok, socket}
   end
 
-  # Handle event deletion
-  defp handle_delete_event(event_params, %Socket{} = socket) do
-    with {:ok, %{event: event}} <- Messages.insert_event_and_drop_tagged(event_params) do
-      send_success(event, socket)
-      notify_sockets(event, socket)
-    else
-      {:error, changes} -> send_error(changes, socket)
-    end
-
-    {:ok, socket}
-  end
-
   # Ephemeral events (not persisted)
   defp handle_ephemeral_event(event_params, %Socket{} = socket) do
     changes = Event.changeset(%Event{}, event_params)
@@ -60,6 +51,18 @@ defmodule Nex.Handlers.EventHandler do
       notify_sockets(event, socket)
     else
       send_error(changes, socket)
+    end
+
+    {:ok, socket}
+  end
+
+  # Handle event deletion
+  defp handle_delete_event(event_params, %Socket{} = socket) do
+    with {:ok, %{event: event}} <- Messages.insert_event_and_drop_tagged(event_params) do
+      send_success(event, socket)
+      notify_sockets(event, socket)
+    else
+      {:error, changes} -> send_error(changes, socket)
     end
 
     {:ok, socket}

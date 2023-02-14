@@ -23,7 +23,7 @@ defmodule Nex.Messages.DBTag do
   def changeset(tag, params \\ %{}) do
     tag
     |> cast(params, [:name, :value])
-    |> validate_required([:name, :value])
+    |> validate_required([:name])
   end
 
 end

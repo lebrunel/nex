@@ -30,6 +30,7 @@ defmodule Nex.Messages.Tag do
   Returns the first two elements of the tag as a map of name and value.
   """
   @spec to_map(t()) :: map()
+  def to_map([name]), do: %{name: name}
   def to_map([name, value | _]), do: %{name: name, value: value}
 
 end

@@ -20,7 +20,12 @@ defmodule Nex.Messages.Event do
     tags: list(Tag.t()),
     content: String.t(),
     sig: String.t(),
+    replace_key: String.t(),
   }
+
+  @replaceable_kinds    [0, 3, 41]
+  @replaceable_range    10000..19999
+  @parameterized_range  30000..39999
 
   @primary_key {:nid, :id, autogenerate: true}
   schema "events" do
@@ -33,6 +38,7 @@ defmodule Nex.Messages.Event do
     field :tags, {:array, {:array, :string}}, default: []
     field :content, :string, default: ""
     field :sig, :string
+    field :replace_key, :string
     has_many :db_tags, DBTag, foreign_key: :event_nid, preload_order: [asc: :nid]
 
     timestamps(type: :utc_datetime, updated_at: false)
@@ -47,7 +53,7 @@ defmodule Nex.Messages.Event do
   @spec changeset(Ecto.Schema.t(), map()) :: Ecto.Changeset.t()
   def changeset(event, params \\ %{}) do
     event
-    |> cast(params, [:id, :pubkey, :created_at, :kind, :tags, :content, :sig])
+    |> cast(params, [:id, :pubkey, :created_at, :kind, :tags, :content, :sig], empty_values: [nil])
     |> cast_database_tags()
     |> validate_required([:id, :pubkey, :created_at, :kind, :sig])
     |> validate_number(:kind, greater_than_or_equal_to: 0)
@@ -57,6 +63,7 @@ defmodule Nex.Messages.Event do
     |> validate_change(:created_at, &validate_field/2)
     |> put_delegation()
     |> put_expiration()
+    |> put_replace_key()
   end
 
   @doc """
@@ -172,6 +179,7 @@ defmodule Nex.Messages.Event do
   end
 
   # Finds valid expiration tags and puts the expiration timestamp into the changeset.
+  @spec put_expiration(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   defp put_expiration(%{valid?: false} = changes), do: changes
   defp put_expiration(changes) do
     case Tag.find_by_name(get_field(changes, :tags), "expiration") do
@@ -179,6 +187,37 @@ defmodule Nex.Messages.Event do
         put_change(changes, :expires_at, String.to_integer(expires_at))
       _ ->
         changes
+    end
+  end
+
+  # For replacable events puts a replaceable key into the changeset.
+  @spec put_replace_key(Ecto.Changeset.t()) :: Ecto.Changeset.t()
+  defp put_replace_key(%{valid?: false} = changes), do: changes
+  defp put_replace_key(changes) do
+    case get_field(changes, :kind) do
+      k when k in @replaceable_kinds or k in @replaceable_range ->
+        replace_key = build_replace_key(changes, [:kind, :pubkey])
+        put_change(changes, :replace_key, replace_key)
+      k when k in @parameterized_range ->
+        d = case Tag.find_by_name(get_field(changes, :tags), "d") do
+          [_, value] when is_binary(value) -> value
+          _ -> ""
+        end
+        replace_key = build_replace_key(changes, [:kind, :pubkey], [d])
+        put_change(changes, :replace_key, replace_key)
+      _ ->
+        changes
+    end
+  end
+
+  # Builds a repalce key string from the changeset.
+  @spec build_replace_key(Ecto.Changeset.t(), list(atom()), list(String.t())) :: String.t()
+  defp build_replace_key(changes, keys, vals \\ [])
+  defp build_replace_key(_changes, [], vals), do: Enum.join(vals, ":")
+  defp build_replace_key(changes, [key | keys], vals) do
+    case get_field(changes, key) do
+      nil -> build_replace_key(changes, keys, vals)
+      val -> build_replace_key(changes, keys, [to_string(val) | vals])
     end
   end
 

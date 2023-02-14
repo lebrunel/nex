@@ -1,5 +1,6 @@
 defmodule Nex.Fixtures do
   alias Nex.Messages.{Event, DBTag}
+  alias Ecto.Changeset
 
   @dialyzer {:nowarn_function, build_event: 1, build_event: 2}
 
@@ -14,9 +15,6 @@ defmodule Nex.Fixtures do
         tags: [],
         content: "test-#{rand}",
       }, Map.take(params, [:created_at, :kind, :tags, :content]))
-      |> then(fn %Event{tags: tags} = event ->
-        Map.put(event, :db_tags, Enum.map(tags, &build_tag/1))
-      end)
 
       {:ok, sig} = K256.Schnorr.create_signature(Event.id_preimage(event), privkey)
 
@@ -34,6 +32,8 @@ defmodule Nex.Fixtures do
     %DBTag{name: name, value: value}
   end
 
-  def create(schema), do: Nex.Repo.insert!(schema)
+  def create(%Changeset{} = changes), do: Nex.Repo.insert!(changes)
+  def create(%Event{} = event), do: create(Event.verify_changeset(%Event{}, Map.from_struct(event)))
+  def create(%DBTag{} = tag), do: create(DBTag.changeset(%DBTag{}, Map.from_struct(tag)))
 
 end

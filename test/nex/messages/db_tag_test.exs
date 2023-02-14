@@ -14,7 +14,6 @@ defmodule Nex.Messages.DBTagTest do
     test "validates required fields" do
       changes = DBTag.changeset(%DBTag{})
       assert %{name: ["can't be blank"]} = errors_on(changes)
-      assert %{value: ["can't be blank"]} = errors_on(changes)
     end
 
     test "accepts valid values" do
