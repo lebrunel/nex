@@ -4,23 +4,17 @@ defmodule Nex.Handlers.EventHandler do
   """
   alias Nex.{Messages, Socket}
   alias Nex.Messages.Event
+  import Event, only: [is_replacable_kind: 1, is_ephemeral_kind: 1]
 
   @behaviour Nex.Handler
-
-  @replaceable_kinds    [0, 3, 41]
-  @replaceable_range    10000..19999
-  @ephemeral_range      20000..29999
-  @parameterized_range  30000..39999
 
   @impl true
   def handle_item(event_params, %Socket{} = socket) when is_map(event_params) do
     case event_params["kind"] do
-      k when k in @replaceable_kinds
-      or k in @replaceable_range
-      or k in @parameterized_range ->
+      k when is_replacable_kind(k) ->
         handle_replaceable_event(event_params, socket)
 
-      k when k in @ephemeral_range ->
+      k when is_ephemeral_kind(k) ->
         handle_ephemeral_event(event_params, socket)
 
       5 ->

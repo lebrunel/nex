@@ -25,7 +25,22 @@ defmodule Nex.Messages.Event do
 
   @replaceable_kinds    [0, 3, 41]
   @replaceable_range    10000..19999
+  @ephemeral_range      20000..29999
   @parameterized_range  30000..39999
+
+  @doc """
+  Guard returning true if the given kind is of any replaceable event.
+  """
+  defguard is_replacable_kind(kind)
+    when kind in @replaceable_kinds
+    or kind in @replaceable_range
+    or kind in @parameterized_range
+
+  @doc """
+  Guard returning true if the given kind is of any ephemeral event.
+  """
+  defguard is_ephemeral_kind(kind)
+    when kind in @ephemeral_range
 
   @primary_key {:nid, :id, autogenerate: true}
   schema "events" do
